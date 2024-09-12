@@ -89,3 +89,35 @@ button:hover {
     content: "\f362"; /* exchange-alt icon */
   }
 }
+
+.lang-button {
+  background-color: transparent !important;
+  color: #333 !important;
+  font-size: 24px !important;
+  padding: 5px 10px !important;
+}
+
+.lang-button:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.lang-button .fa-flag {
+  background: linear-gradient(to right, #0055A4 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #EF4135 66.66%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.lang-button .fa-globe {
+  background: 
+    linear-gradient(to bottom, transparent 20%, #012169 20%, #012169 80%, transparent 80%),
+    linear-gradient(to right, transparent 35%, #012169 35%, #012169 65%, transparent 65%),
+    linear-gradient(to bottom right, transparent 48%, #C8102E 48%, #C8102E 52%, transparent 52%),
+    linear-gradient(to bottom left, transparent 48%, #C8102E 48%, #C8102E 52%, transparent 52%),
+    #5e28285e;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
