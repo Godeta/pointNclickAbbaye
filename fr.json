@@ -5,5 +5,8 @@
   "switchAbbaye": "Changer la Vue de l'Abbaye",
   "headerTitle": "Visite Interactive de l'Abbaye de Déols",
   "introText1": "Voici l'Abbaye de Déols",
-  "introText2": "Nous allons apprendre beaucoup de choses sur l'abbaye. Elle a une riche histoire s'étendant sur plusieurs siècles."
+  "introText2": "Nous allons apprendre beaucoup de choses sur l'abbaye. Elle a une riche histoire s'étendant sur plusieurs siècles.",
+  "infoMode": "Informations",
+  "homeButton": "Accueil",
+  "abbayeInfo": "L'Abbaye de Déols, fondée en 917, était l'une des plus importantes abbayes bénédictines du Berry. Elle a joué un rôle significatif dans la vie religieuse et culturelle de la région pendant des siècles. L'architecture de l'abbaye était un remarquable exemple de style roman, avec des ajouts gothiques ultérieurs. Malgré sa destruction pendant la Révolution française, les ruines restantes témoignent encore de son ancienne grandeur."
 }

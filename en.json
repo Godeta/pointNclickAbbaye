@@ -5,5 +5,8 @@
   "switchAbbaye": "Switch Abbaye View",
   "headerTitle": "Abbaye de Déols Interactive Tour",
   "introText1": "This is the Abbaye de Déols",
-  "introText2": "We will learn a lot of things about the abbaye. It has a rich history spanning several centuries."
+  "introText2": "We will learn a lot of things about the abbaye. It has a rich history spanning several centuries.",
+  "infoMode": "Information",
+  "homeButton": "Home",
+  "abbayeInfo": "The Abbaye de Déols, founded in 917, was one of the most important Benedictine abbeys in Berry. It played a significant role in the religious and cultural life of the region for centuries. The abbey's architecture was a remarkable example of Romanesque style, with later Gothic additions. Despite its destruction during the French Revolution, the remaining ruins still testify to its former grandeur."
 }

@@ -121,3 +121,29 @@ button:hover {
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
+
+.info-button {
+  background-color: transparent !important;
+  color: #333 !important;
+  font-size: 24px !important;
+  padding: 5px 10px !important;
+  margin-right: auto;
+}
+
+.info-button:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+#info-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.home-button {
+  margin-bottom: 20px;
+}
+
+button.active {
+  background-color: #45a049;
+}

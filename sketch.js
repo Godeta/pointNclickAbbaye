@@ -1,12 +1,19 @@
 let oldAbbayeImg, currentAbbayeImg, overviewImg, planEgliseImg;
 let textBox1Visible = false;
 let textBox2Visible = false;
-let currentMode = 'frontView';
+
+// Mode management
+let currentMode = {
+  main: 'exploration',
+  view: 'frontView',
+  abbaye: 'old'
+};
 let showOldAbbaye = true;
 let languageData;
 let currentLanguage = 'en';
 
 function preload() {
+  preloadAssets();
   oldAbbayeImg = loadImage('images/old_abbaye.png');
   currentAbbayeImg = loadImage('images/current_abbaye.png');
   overviewImg = loadImage('images/vue3-4.png');
@@ -18,6 +25,7 @@ function loadLanguageData() {
   loadJSON(currentLanguage + '.json', (data) => {
     languageData = data;
     updateButtonLabels();
+    createInfoContainer();
   });
 }
 
@@ -53,13 +61,12 @@ function setup() {
     let canvas = createCanvas(canvasSize.width, canvasSize.height);
     canvas.parent('canvas-container');
     
-    preloadAssets();
+    preload();
     setupHotspots();
     textAlign(CENTER, CENTER);
     textSize(16);
     
     createModeButtons();
-    createSwitchButton();
   }
   
   function calculateCanvasSize() {
@@ -88,7 +95,7 @@ function draw() {
       drawExploration();
       break;
     case INFO:
-      drawInfo();
+      drawExploration();
       break;
   }
   
@@ -105,6 +112,7 @@ function drawIntro() {
   if (textBox2Visible) {
     drawTextBox(languageData.introText2, 100, height - 380, width - 200, 140);
   }
+  
 }
 
 function drawExploration() {
@@ -121,8 +129,9 @@ function drawHotspots() {
 }
 
 function drawCurrentImage() {
+  print(showOldAbbaye)
   let img;
-  switch (currentMode) {
+  switch (currentMode.view) {
     case 'frontView':
       img = showOldAbbaye ? oldAbbayeImg : currentAbbayeImg;
       break;
@@ -133,7 +142,17 @@ function drawCurrentImage() {
       img = planEgliseImg;
       break;
   }
-  image(img, 0, 50, width, height - 50);
+  
+  if (img && img.width > 0) {
+    image(img, 0, 50, width, height - 50);
+    
+  } else {
+    fill(200);
+    rect(0, 50, width, height - 50);
+    fill(0);
+    textAlign(CENTER, CENTER);
+    text('Loading image...', width/2, height/2);
+  }
 }
 
 function drawTextBox(message, x, y, w, h) {
@@ -159,7 +178,7 @@ function mousePressed() {
   } else if (gameState === EXPLORATION) {
     checkHotspots();
   } else if (gameState === INFO) {
-    gameState = EXPLORATION;
+    // gameState = EXPLORATION;
   }
 }
 
@@ -169,19 +188,23 @@ function createModeButtons() {
   let frontViewBtn = createButton('frontView');
   frontViewBtn.parent(buttonContainer);
   frontViewBtn.id('frontViewBtn');
-  frontViewBtn.mousePressed(() => currentMode = 'frontView');
+  frontViewBtn.mousePressed(() => currentMode.view = 'frontView');
   
   let view34Btn = createButton('3-4View');
   view34Btn.parent(buttonContainer);
   view34Btn.id('view34Btn');
-  view34Btn.mousePressed(() => currentMode = '3-4View');
+  view34Btn.mousePressed(() => currentMode.view = '3-4View');
   
   let churchPlanBtn = createButton('churchPlanBtn');
   churchPlanBtn.parent(buttonContainer);
   churchPlanBtn.id('churchPlanBtn');
-  churchPlanBtn.mousePressed(() => currentMode = 'churchPlan');
+  churchPlanBtn.mousePressed(() => currentMode.view = 'churchPlan');
 
+  createInfoButton();
   createLanguageButton();
+  
+  createSwitchButton();
+  // updateUI()
 }
 
 function createSwitchButton() {
@@ -189,31 +212,57 @@ function createSwitchButton() {
   let switchButton = createButton('Switch Abbaye View');
   switchButton.parent(buttonContainer);
   switchButton.id('switchButton');
-  switchButton.mousePressed(() => {
-    if (currentMode === 'frontView') {
-      showOldAbbaye = !showOldAbbaye;
-    }
-  });
+  switchButton.mousePressed(() => showOldAbbaye = !showOldAbbaye);
+}
+function createInfoButton() {
+  let infoButton = createButton('');
+  infoButton.parent('#button-container');
+  infoButton.id('infoButton');
+  infoButton.class('info-button');
+  infoButton.html('<i class="fa-solid fa-book"></i>');
+  infoButton.mousePressed(toggleInfoMode);
 }
 
-function preloadAssets() {
-  // Load info texts
-  infoTexts[0] = "The Abbaye de Déols was founded in 917...";
-  infoTexts[1] = "In the 12th century, the abbey became...";
-  // Add more info texts as needed
+function toggleInfoMode() {
+  gameState = gameState === EXPLORATION ? INFO : EXPLORATION;
+  updateUI();
+}
+function updateUI() {
+  let canvasContainer = select('#canvas-container');
+  let infoContainer = select('#info-container');
+  
+  if (gameState === EXPLORATION || gameState === INTRO) {
+    canvasContainer.style('display', 'block');
+    infoContainer.style('display', 'none');
+  } else {
+    canvasContainer.style('display', 'none');
+    infoContainer.style('display', 'block');
+  }
+  
+  updateButtonStates();
 }
 
-function setupHotspots() {
-  // Define clickable areas for each scene
-  hotspots[0] = [
-    { x: 100, y: 200, w: 50, h: 50, nextScene: 1, info: 0 },
-    { x: 300, y: 150, w: 60, h: 60, nextScene: -1, info: 1 },
-  ];
-  hotspots[1] = [
-    { x: 200, y: 300, w: 70, h: 70, nextScene: 0, info: 2 },
-  ];
-  // Add more hotspots for other scenes
+function updateButtonStates() {
+  selectAll('#button-container button').forEach(btn => btn.removeClass('active'));
+  select('#' + currentMode.view.replace('-', '') + 'Btn').addClass('active');
 }
+
+function createInfoContainer() {
+  let infoContainer = select('#info-container');
+  infoContainer.html(''); // Clear existing content
+  
+  let homeButton = createButton(languageData.homeButton);
+  homeButton.parent(infoContainer);
+  homeButton.class('home-button');
+  homeButton.mousePressed(toggleInfoMode);
+  
+  let infoTitle = createElement('h1', languageData.infoMode);
+  infoTitle.parent(infoContainer);
+  
+  let infoText = createP(languageData.abbayeInfo);
+  infoText.parent(infoContainer);
+}
+
 
 function checkHotspots() {
   for (let hotspot of hotspots[currentScene]) {
