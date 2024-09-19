@@ -1,0 +1,13 @@
+partie franstasmée avec Launus, que des micro-jeux qui ne me prennent pas trop de temps 
+
+d'abord pas besoin de sprite il vient sauver le village
+ensuite on va l'informer d'une nouvelle importante
+on est Raoûl et on l'affronte 
+Raoûl enigme
+
+-> jeu type click avant flèche en feu tombent -> launus unknown
+-> jeu saute au dessus ennemi type Mario -> launus face
+(besoin sprite villageois court et saute )
+-> jeu type pokemon tour par tour (simplifié en pierre-feuille-ciseau)avec launus 1 et 2
+-> enigme avec launus archidiac
+-> fin avec Launus vieux + discours mort Raoul

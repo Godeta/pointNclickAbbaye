@@ -2,6 +2,8 @@ let oldAbbayeImg, currentAbbayeImg, overviewImg, planEgliseImg;
 let textBox1Visible = false;
 let textBox2Visible = false;
 
+let clickableAreas = [];
+
 // Mode management
 let currentMode = {
   main: 'exploration',
@@ -67,6 +69,7 @@ function setup() {
     textSize(16);
     
     createModeButtons();
+
   }
   
   function calculateCanvasSize() {
@@ -100,6 +103,11 @@ function draw() {
   }
   
   drawHeader();
+    // Update and draw each clickable area
+    for (let area of clickableAreas) {
+      area.checkHover();
+      area.draw();
+    }
 }
 
 function drawIntro() {
@@ -129,30 +137,62 @@ function drawHotspots() {
 }
 
 function drawCurrentImage() {
-  print(showOldAbbaye)
+  print(showOldAbbaye);
   let img;
+
+  // Clear existing clickable areas before adding new ones
+  clearClickableAreas();
+
   switch (currentMode.view) {
     case 'frontView':
       img = showOldAbbaye ? oldAbbayeImg : currentAbbayeImg;
+
+      // Add clickable areas for the front view
+      clickableAreas.push(new ClickableArea(100, 100, 150, 100, () => {
+        console.log("Area 1 clicked!");
+        window.location = "QuizHistory/index.html";
+      }));
+      
+      clickableAreas.push(new ClickableArea(300, 200, 150, 100, () => {
+        console.log("Area 2 clicked!");
+      }));
       break;
+
     case '3-4View':
       img = overviewImg;
+
+      // Add clickable areas for the 3-4 view
+      clickableAreas.push(new ClickableArea(50, 50, 200, 150, () => {
+        console.log("3-4 View Area clicked!");
+      }));
       break;
+
     case 'churchPlan':
       img = planEgliseImg;
+
+      // Add clickable areas for the church plan
+      clickableAreas.push(new ClickableArea(150, 150, 100, 100, () => {
+        console.log("Church Plan Area clicked!");
+      }));
       break;
   }
-  
+
   if (img && img.width > 0) {
     image(img, 0, 50, width, height - 50);
-    
   } else {
     fill(200);
     rect(0, 50, width, height - 50);
     fill(0);
     textAlign(CENTER, CENTER);
-    text('Loading image...', width/2, height/2);
+    text('Loading image...', width / 2, height / 2);
   }
+}
+
+/**
+ * Clears the existing clickable areas from the clickableAreas array.
+ */
+function clearClickableAreas() {
+  clickableAreas = []; // Reset the clickableAreas array
 }
 
 function drawTextBox(message, x, y, w, h) {
@@ -179,6 +219,9 @@ function mousePressed() {
     checkHotspots();
   } else if (gameState === INFO) {
     // gameState = EXPLORATION;
+  }
+  for (let area of clickableAreas) {
+    area.handleClick();
   }
 }
 

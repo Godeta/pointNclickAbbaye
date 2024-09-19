@@ -8,5 +8,27 @@
   "introText2": "We will learn a lot of things about the abbaye. It has a rich history spanning several centuries.",
   "infoMode": "Information",
   "homeButton": "Home",
-  "abbayeInfo": "The Abbaye de Déols, founded in 917, was one of the most important Benedictine abbeys in Berry. It played a significant role in the religious and cultural life of the region for centuries. The abbey's architecture was a remarkable example of Romanesque style, with later Gothic additions. Despite its destruction during the French Revolution, the remaining ruins still testify to its former grandeur."
+  "abbayeInfo": "The Abbaye de Déols, founded in 917, was one of the most important Benedictine abbeys in Berry. It played a significant role in the religious and cultural life of the region for centuries. The abbey's architecture was a remarkable example of Romanesque style, with later Gothic additions. Despite its destruction during the French Revolution, the remaining ruins still testify to its former grandeur.",
+  "quizQuestions": [
+    {
+      "question": "What is the capital of France?",
+      "choices": ["Paris", "London", "Berlin", "Madrid"],
+      "correctIndex": 0
+    },
+    {
+      "question": "What is the largest ocean?",
+      "choices": ["Atlantic", "Indian", "Pacific", "Arctic"],
+      "correctIndex": 2
+    },
+    {
+      "question": "Who wrote 'Les Misérables'?",
+      "choices": ["Victor Hugo", "Émile Zola", "Gustave Flaubert", "Marcel Proust"],
+      "correctIndex": 0
+    },
+    {
+      "question": "What is the chemical symbol for water?",
+      "choices": ["H2O", "O2", "CO2", "NaCl"],
+      "correctIndex": 0
+    }
+  ]
 }

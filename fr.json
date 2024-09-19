@@ -8,5 +8,27 @@
   "introText2": "Nous allons apprendre beaucoup de choses sur l'abbaye. Elle a une riche histoire s'étendant sur plusieurs siècles.",
   "infoMode": "Informations",
   "homeButton": "Accueil",
-  "abbayeInfo": "L'Abbaye de Déols, fondée en 917, était l'une des plus importantes abbayes bénédictines du Berry. Elle a joué un rôle significatif dans la vie religieuse et culturelle de la région pendant des siècles. L'architecture de l'abbaye était un remarquable exemple de style roman, avec des ajouts gothiques ultérieurs. Malgré sa destruction pendant la Révolution française, les ruines restantes témoignent encore de son ancienne grandeur."
+  "abbayeInfo": "L'Abbaye de Déols, fondée en 917, était l'une des plus importantes abbayes bénédictines du Berry. Elle a joué un rôle significatif dans la vie religieuse et culturelle de la région pendant des siècles. L'architecture de l'abbaye était un remarquable exemple de style roman, avec des ajouts gothiques ultérieurs. Malgré sa destruction pendant la Révolution française, les ruines restantes témoignent encore de son ancienne grandeur.",
+  "quizQuestions" :[
+    {
+      "question": "Quelle est la capitale de la France?",
+      "choices": ["Paris", "Londres", "Berlin", "Madrid"],
+      "correctIndex": 0
+    },
+    {
+      "question": "Quel est le plus grand océan?",
+      "choices": ["Atlantique", "Indien", "Pacifique", "Arctique"],
+      "correctIndex": 2
+    },
+    {
+      "question": "Qui a écrit 'Les Misérables'?",
+      "choices": ["Victor Hugo", "Émile Zola", "Gustave Flaubert", "Marcel Proust"],
+      "correctIndex": 0
+    },
+    {
+      "question": "Quel est le symbole chimique de l'eau?",
+      "choices": ["H2O", "O2", "CO2", "NaCl"],
+      "correctIndex": 0
+    }
+  ]
 }
