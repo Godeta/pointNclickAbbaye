@@ -148,13 +148,14 @@ function drawCurrentImage() {
       img = showOldAbbaye ? oldAbbayeImg : currentAbbayeImg;
 
       // Add clickable areas for the front view
-      clickableAreas.push(new ClickableArea(100, 100, 150, 100, () => {
+      clickableAreas.push(new ClickableArea(500, 200, 150, 100, () => {
         console.log("Area 1 clicked!");
         window.location = "QuizHistory/index.html";
-      }));
+      },img ));
       
       clickableAreas.push(new ClickableArea(300, 200, 150, 100, () => {
         console.log("Area 2 clicked!");
+        window.location = "Puzzle/index.html";
       }));
       break;
 
