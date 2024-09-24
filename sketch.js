@@ -157,6 +157,11 @@ function drawCurrentImage() {
         console.log("Area 2 clicked!");
         window.location = "Puzzle/index.html";
       }));
+
+      clickableAreas.push(new ClickableArea(100, 400, 150, 100, () => {
+        console.log("Area 3 clicked!");
+        window.location = "Launus_treasure/index.html";
+      }));
       break;
 
     case '3-4View':
