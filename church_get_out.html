@@ -1,0 +1,421 @@
+<html><head><base href="." />
+    <title>Interactive 3D Church Interior</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+        #exitMessage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: Arial, sans-serif;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="exitMessage">Launus just got out of the church</div>
+    <script src="three.min.js"></script>
+    <script >
+
+( function () {
+
+const _euler = new THREE.Euler( 0, 0, 0, 'YXZ' );
+
+const _vector = new THREE.Vector3();
+
+const _changeEvent = {
+    type: 'change'
+};
+const _lockEvent = {
+    type: 'lock'
+};
+const _unlockEvent = {
+    type: 'unlock'
+};
+
+const _PI_2 = Math.PI / 2;
+
+class PointerLockControls extends THREE.EventDispatcher {
+
+    constructor( camera, domElement ) {
+
+        super();
+
+        if ( domElement === undefined ) {
+
+            console.warn( 'THREE.PointerLockControls: The second parameter "domElement" is now mandatory.' );
+            domElement = document.body;
+
+        }
+
+        this.domElement = domElement;
+        this.isLocked = false; // Set to constrain the pitch of the camera
+        // Range is 0 to Math.PI radians
+
+        this.minPolarAngle = 0; // radians
+
+        this.maxPolarAngle = Math.PI; // radians
+
+        const scope = this;
+
+        function onMouseMove( event ) {
+
+            if ( scope.isLocked === false ) return;
+            const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+            const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+            _euler.setFromQuaternion( camera.quaternion );
+
+            _euler.y -= movementX * 0.002;
+            _euler.x -= movementY * 0.002;
+            _euler.x = Math.max( _PI_2 - scope.maxPolarAngle, Math.min( _PI_2 - scope.minPolarAngle, _euler.x ) );
+            camera.quaternion.setFromEuler( _euler );
+            scope.dispatchEvent( _changeEvent );
+
+        }
+
+        function onPointerlockChange() {
+
+            if ( scope.domElement.ownerDocument.pointerLockElement === scope.domElement ) {
+
+                scope.dispatchEvent( _lockEvent );
+                scope.isLocked = true;
+
+            } else {
+
+                scope.dispatchEvent( _unlockEvent );
+                scope.isLocked = false;
+
+            }
+
+        }
+
+        function onPointerlockError() {
+
+            console.error( 'THREE.PointerLockControls: Unable to use Pointer Lock API' );
+
+        }
+
+        this.connect = function () {
+
+            scope.domElement.ownerDocument.addEventListener( 'mousemove', onMouseMove );
+            scope.domElement.ownerDocument.addEventListener( 'pointerlockchange', onPointerlockChange );
+            scope.domElement.ownerDocument.addEventListener( 'pointerlockerror', onPointerlockError );
+
+        };
+
+        this.disconnect = function () {
+
+            scope.domElement.ownerDocument.removeEventListener( 'mousemove', onMouseMove );
+            scope.domElement.ownerDocument.removeEventListener( 'pointerlockchange', onPointerlockChange );
+            scope.domElement.ownerDocument.removeEventListener( 'pointerlockerror', onPointerlockError );
+
+        };
+
+        this.dispose = function () {
+
+            this.disconnect();
+
+        };
+
+        this.getObject = function () {
+
+            // retaining this method for backward compatibility
+            return camera;
+
+        };
+
+        this.getDirection = function () {
+
+            const direction = new THREE.Vector3( 0, 0, - 1 );
+            return function ( v ) {
+
+                return v.copy( direction ).applyQuaternion( camera.quaternion );
+
+            };
+
+        }();
+
+        this.moveForward = function ( distance ) {
+
+            // move forward parallel to the xz-plane
+            // assumes camera.up is y-up
+            _vector.setFromMatrixColumn( camera.matrix, 0 );
+
+            _vector.crossVectors( camera.up, _vector );
+
+            camera.position.addScaledVector( _vector, distance );
+
+        };
+
+        this.moveRight = function ( distance ) {
+
+            _vector.setFromMatrixColumn( camera.matrix, 0 );
+
+            camera.position.addScaledVector( _vector, distance );
+
+        };
+
+        this.lock = function () {
+
+            this.domElement.requestPointerLock();
+
+        };
+
+        this.unlock = function () {
+
+            scope.domElement.ownerDocument.exitPointerLock();
+
+        };
+
+        this.connect();
+
+    }
+
+}
+
+THREE.PointerLockControls = PointerLockControls;
+
+} )();
+
+    </script>
+    <script>
+        let scene, camera, renderer, controls;
+        let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false, canJump = false;
+        let velocity = new THREE.Vector3();
+        let direction = new THREE.Vector3();
+        let prevTime = performance.now();
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+
+            // Floor
+            const floorTexture = new THREE.TextureLoader().load(createWoodTexture());
+            floorTexture.wrapS = THREE.RepeatWrapping;
+            floorTexture.wrapT = THREE.RepeatWrapping;
+            floorTexture.repeat.set(10, 10);
+            const floorGeometry = new THREE.PlaneGeometry(20, 30);
+            const floorMaterial = new THREE.MeshPhongMaterial({ map: floorTexture });
+            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor.rotation.x = -Math.PI / 2;
+            scene.add(floor);
+
+            // Ceiling (vaulted)
+            const ceilingGeometry = new THREE.SphereGeometry(15, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
+            const ceilingMaterial = new THREE.MeshPhongMaterial({ color: 0xf0f0f0, side: THREE.BackSide });
+            const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+            ceiling.position.set(0, 10, 0);
+            scene.add(ceiling);
+
+            // Main Altar
+            const altarGeometry = new THREE.BoxGeometry(4, 1.2, 2);
+            const altarMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
+            const altar = new THREE.Mesh(altarGeometry, altarMaterial);
+            altar.position.set(0, 0.6, -14);
+            scene.add(altar);
+
+            // Pews
+            const pewGeometry = new THREE.BoxGeometry(8, 1, 1);
+            const pewMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
+            for (let i = 0; i < 5; i++) {
+                for (let j = -1; j <= 1; j += 2) {
+                    const pew = new THREE.Mesh(pewGeometry, pewMaterial);
+                    pew.position.set(j * 4, 0.5, i * 3 - 10);
+                    scene.add(pew);
+                }
+            }
+
+            // Cross
+            const crossMaterial = new THREE.MeshPhongMaterial({ color: 0xD4AF37 });
+            const verticalPost = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 4), crossMaterial);
+            verticalPost.position.set(0, 6, -14.8);
+            scene.add(verticalPost);
+
+            const horizontalBeam = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 2), crossMaterial);
+            horizontalBeam.rotation.z = Math.PI / 2;
+            horizontalBeam.position.set(0, 7, -14.8);
+            scene.add(horizontalBeam);
+
+            // Windows
+            const windowGeometry = new THREE.PlaneGeometry(2, 4);
+            const windowMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x87CEEB, 
+                transparent: true, 
+                opacity: 0.7,
+                side: THREE.DoubleSide
+            });
+
+            for (let i = -2; i <= 2; i++) {
+                if (i !== 0) {
+                    const leftWindow = new THREE.Mesh(windowGeometry, windowMaterial);
+                    leftWindow.position.set(-10, 5, i * 5);
+                    leftWindow.rotation.y = Math.PI / 2;
+                    scene.add(leftWindow);
+
+                    const rightWindow = new THREE.Mesh(windowGeometry, windowMaterial);
+                    rightWindow.position.set(10, 5, i * 5);
+                    rightWindow.rotation.y = -Math.PI / 2;
+                    scene.add(rightWindow);
+                }
+            }
+
+            // Door
+            const doorGeometry = new THREE.BoxGeometry(3, 5, 0.2);
+            const doorMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
+            const door = new THREE.Mesh(doorGeometry, doorMaterial);
+            door.position.set(0, 2.5, 15);
+            scene.add(door);
+
+            // Camera and controls setup
+            camera.position.set(0, 1.6, 10);
+            controls = new THREE.PointerLockControls(camera, document.body);
+            scene.add(controls.getObject());
+
+            // Event listeners
+            document.addEventListener('click', function() {
+                controls.lock();
+            });
+            document.addEventListener('keydown', onKeyDown);
+            document.addEventListener('keyup', onKeyUp);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onKeyDown(event) {
+            switch (event.code) {
+                case 'ArrowUp':
+                case 'KeyW':
+                    moveForward = true;
+                    break;
+                case 'ArrowLeft':
+                case 'KeyA':
+                    moveLeft = true;
+                    break;
+                case 'ArrowDown':
+                case 'KeyS':
+                    moveBackward = true;
+                    break;
+                case 'ArrowRight':
+                case 'KeyD':
+                    moveRight = true;
+                    break;
+                case 'Space':
+                    if (canJump === true) velocity.y += 350;
+                    canJump = false;
+                    break;
+            }
+        }
+
+        function onKeyUp(event) {
+            switch (event.code) {
+                case 'ArrowUp':
+                case 'KeyW':
+                    moveForward = false;
+                    break;
+                case 'ArrowLeft':
+                case 'KeyA':
+                    moveLeft = false;
+                    break;
+                case 'ArrowDown':
+                case 'KeyS':
+                    moveBackward = false;
+                    break;
+                case 'ArrowRight':
+                case 'KeyD':
+                    moveRight = false;
+                    break;
+            }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function createWoodTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(0, 0, 256, 256);
+
+            for (let i = 0; i < 50; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, Math.random() * 256);
+                ctx.lineTo(256, Math.random() * 256);
+                ctx.strokeStyle = `rgba(139, 69, 19, ${Math.random() * 0.5})`;
+                ctx.lineWidth = Math.random() * 5 + 1;
+                ctx.stroke();
+            }
+
+            return canvas.toDataURL();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = performance.now();
+            if (controls.isLocked === true) {
+                const delta = (time - prevTime) / 1000;
+
+                velocity.x -= velocity.x * 10.0 * delta;
+                velocity.z -= velocity.z * 10.0 * delta;
+                velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+
+                direction.z = Number(moveForward) - Number(moveBackward);
+                direction.x = Number(moveRight) - Number(moveLeft);
+                direction.normalize();
+
+                if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
+                if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+
+                controls.moveRight(-velocity.x * delta);
+                controls.moveForward(-velocity.z * delta);
+
+                controls.getObject().position.y += (velocity.y * delta);
+
+                if (controls.getObject().position.y < 1.6) {
+                    velocity.y = 0;
+                    controls.getObject().position.y = 1.6;
+                    canJump = true;
+                }
+
+                // Check if player is near the door
+                if (controls.getObject().position.z > 13 && Math.abs(controls.getObject().position.x) < 1.5) {
+                    document.getElementById('exitMessage').style.display = 'block';
+                    setTimeout(() => {
+                        window.location = 'index.html'; // Redirect to index.html
+                    }, 2000);
+                } else {
+                    document.getElementById('exitMessage').style.display = 'none';
+                }
+            }
+
+            prevTime = time;
+
+            renderer.render(scene, camera);
+        }
+
+        init();
+        animate();
+    </script>
+</body></html>

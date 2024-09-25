@@ -170,6 +170,7 @@ function drawCurrentImage() {
       // Add clickable areas for the 3-4 view
       clickableAreas.push(new ClickableArea(50, 50, 200, 150, () => {
         console.log("3-4 View Area clicked!");
+        window.location = "parchment_clean.html";
       }));
       break;
 
@@ -179,6 +180,7 @@ function drawCurrentImage() {
       // Add clickable areas for the church plan
       clickableAreas.push(new ClickableArea(150, 150, 100, 100, () => {
         console.log("Church Plan Area clicked!");
+        window.location = "church_get_out.html";
       }));
       break;
   }
