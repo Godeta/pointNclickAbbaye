@@ -139,7 +139,7 @@ function drawHotspots() {
 function drawCurrentImage() {
   print(showOldAbbaye);
   let img;
-
+  cursor('default');
   // Clear existing clickable areas before adding new ones
   clearClickableAreas();
 
@@ -148,19 +148,29 @@ function drawCurrentImage() {
       img = showOldAbbaye ? oldAbbayeImg : currentAbbayeImg;
 
       // Add clickable areas for the front view
-      clickableAreas.push(new ClickableArea(500, 200, 150, 100, () => {
+      clickableAreas.push(new ClickableArea(520, 100, 150, 100, () => {
         console.log("Area 1 clicked!");
         window.location = "QuizHistory/index.html";
       },img ));
       
-      clickableAreas.push(new ClickableArea(300, 200, 150, 100, () => {
+      clickableAreas.push(new ClickableArea(400, 630, 150, 100, () => {
         console.log("Area 2 clicked!");
         window.location = "Puzzle/index.html";
       }));
 
-      clickableAreas.push(new ClickableArea(100, 400, 150, 100, () => {
+      clickableAreas.push(new ClickableArea(540, 500, 150, 100, () => {
         console.log("Area 3 clicked!");
         window.location = "Launus_treasure/index.html";
+      },img , 0, 150));
+
+      clickableAreas.push(new ClickableArea(220, 200, 150, 100, () => {
+        console.log("Area 3 clicked!");
+        window.location = "Launus_adventure_game/index.html";
+      }));
+
+      clickableAreas.push(new ClickableArea(820, 200, 150, 100, () => {
+        console.log("Area 3 clicked!");
+        window.location = "Launus_adventure_game/index.html";
       }));
       break;
 
@@ -168,9 +178,14 @@ function drawCurrentImage() {
       img = overviewImg;
 
       // Add clickable areas for the 3-4 view
-      clickableAreas.push(new ClickableArea(50, 50, 200, 150, () => {
+      clickableAreas.push(new ClickableArea(680, 300, 130, 200, () => {
         console.log("3-4 View Area clicked!");
         window.location = "parchment_clean.html";
+      }));
+
+      clickableAreas.push(new ClickableArea(740, 130, 90, 200, () => {
+        console.log("3-4 View Area clicked!");
+        window.location = "info_church/index.html";
       }));
       break;
 
@@ -178,10 +193,10 @@ function drawCurrentImage() {
       img = planEgliseImg;
 
       // Add clickable areas for the church plan
-      clickableAreas.push(new ClickableArea(150, 150, 100, 100, () => {
+      clickableAreas.push(new ClickableArea(850, 350, 150, 100, () => {
         console.log("Church Plan Area clicked!");
         window.location = "church_get_out.html";
-      }));
+      } ));
       break;
   }
 

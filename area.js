@@ -11,7 +11,7 @@ class ClickableArea {
    * @param {number} height - The height of the area.
    * @param {function} onClick - The function to call when the area is clicked.
    */
-  constructor(x, y, width, height, onClick, image = null) {
+  constructor(x, y, width, height, onClick, image = null, offsetX=0, offsetY=0) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -19,6 +19,8 @@ class ClickableArea {
     this.onClick = onClick;
     this.isHovered = false;
     this.image = image; // Store the image
+    this.offsetX = offsetX;
+    this.offsetY = offsetY;
   }
 
     /**
@@ -32,6 +34,8 @@ class ClickableArea {
       const zoomedWidth = this.width * zoomFactor;
       const zoomedHeight = this.height * zoomFactor;
 
+      cursor('pointer');
+
       // Draw the zoomed-in rectangle of the image with a glow effect
       push(); // Save the current drawing state
       noFill();
@@ -42,16 +46,18 @@ class ClickableArea {
 
       // Draw the zoomed-in image
       image(this.image, this.x - (zoomedWidth - this.width) / 2, this.y - (zoomedHeight - this.height) / 2, zoomedWidth, zoomedHeight, 
-            this.x, this.y, this.width, this.height);
+            this.x-this.width/1.5+this.offsetX, this.y+this.height+this.offsetY, this.width, this.height);
   } else if (this.isHovered) {
+      cursor('pointer');
       // Draw the default rectangle with a slight scale effect
       push(); // Save the current drawing state
-      fill(225, 225, 225, 127);
+      fill(135, 135, 135, 127);
       noStroke();
       rect(this.x, this.y, this.width, this.height, 10); // Rounded corners
       pop(); // Restore the previous drawing state
   } else {
       noFill();
+      // cursor('default');
   }
   }
 
