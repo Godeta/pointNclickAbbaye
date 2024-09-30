@@ -1,0 +1,435 @@
+<html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exposition Interactive sur les Moines Médiévaux</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0e6d2;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #exhibit-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  #monastery {
+    width: 800px;
+    height: 600px;
+    background-color: #8b7355;
+    position: relative;
+    overflow: hidden;
+    border: 10px solid #5d4037;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    transition: all 1s ease;
+  }
+  .monk {
+    width: 20px;
+    height: 40px;
+    position: absolute;
+    transition: all 0.5s ease;
+  }
+  .monk::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #4e342e;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  }
+  .monk::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: #d7ccc8;
+    border-radius: 50%;
+    top: 5px;
+    left: 4px;
+  }
+  #controls {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .control-group {
+    display: flex;
+    gap: 10px;
+  }
+  .control-group-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  button {
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #795548;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  button:hover {
+    background-color: #5d4037;
+  }
+  button.active {
+    background-color: #3e2723;
+  }
+  #info {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    max-width: 800px;
+    line-height: 1.6;
+  }
+  #description p {
+    margin-bottom: 15px;
+  }
+  #activity-description {
+    font-weight: bold;
+  }
+  #examples {
+    font-style: italic;
+  }
+  #statistics {
+    color: #5d4037;
+  }
+  .scriptorium, .field, .garden, .church {
+    position: absolute;
+    transition: all 0.5s ease;
+  }
+  .scriptorium {
+    width: 200px;
+    height: 150px;
+    background-color: #8d6e63;
+    bottom: 20px;
+    right: 20px;
+  }
+  .field {
+    width: 300px;
+    height: 200px;
+    background-color: #8bc34a;
+    top: 20px;
+    left: 20px;
+  }
+  .garden {
+    width: 150px;
+    height: 100px;
+    background-color: #4caf50;
+    bottom: 20px;
+    left: 20px;
+  }
+  .church {
+    width: 100px;
+    height: 200px;
+    background-color: #bdbdbd;
+    top: 20px;
+    right: 20px;
+  }
+  #legend {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 15px;
+    border-radius: 5px;
+    width: 200px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 1px solid #000;
+  }
+  .home-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.home-link {
+    display: inline-block;
+    padding: 12px 24px; /* Increased padding for better touch targets */
+    background-color: #8b4513; /* Dark brown */
+    color: white;
+    border-radius: 25px; /* Rounded corners */
+    text-decoration: none;
+    font-size: 1.5em; /* Increased font size for home link */
+    transition: background-color 0.3s, transform 0.2s; /* Animation for hover effect */
+}
+
+.home-link:hover {
+    background-color: #a0522d; /* Lighter brown on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+</style>
+</head>
+<body>
+  <h1>Une Journée dans la Vie des Moines Médiévaux</h1>
+  <div id="exhibit-container">
+    <div id="monastery">
+      <div class="scriptorium"></div>
+      <div class="field"></div>
+      <div class="garden"></div>
+      <div class="church"></div>
+    </div>
+    <div id="legend">
+      <h3>Légende</h3>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #bdbdbd;"></div>
+        <span>Église</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #8d6e63;"></div>
+        <span>Scriptorium</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #8bc34a;"></div>
+        <span>Champ</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #4caf50;"></div>
+        <span>Jardin</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #4e342e; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"></div>
+        <span>Moine</span>
+      </div>
+    </div>
+  </div>
+  <div id="controls">
+    <div class="control-group">
+      <div class="control-group-label">Moment de la journée :</div>
+      <button id="morning" class="time">Matin</button>
+      <button id="afternoon" class="time">Après-midi</button>
+      <button id="night" class="time">Nuit</button>
+    </div>
+    <div class="control-group">
+      <div class="control-group-label">Saison :</div>
+      <button id="spring" class="season">Printemps</button>
+      <button id="summer" class="season">Été</button>
+      <button id="autumn" class="season">Automne</button>
+      <button id="winter" class="season">Hiver</button>
+    </div>
+    <div class="control-group">
+      <div class="control-group-label">Siècle :</div>
+      <button id="century11" class="century">11ème Siècle</button>
+      <button id="century12" class="century">12ème Siècle</button>
+      <button id="century13" class="century">13ème Siècle</button>
+    </div>
+  </div>
+  <div id="info">
+    <h2>Scénario Actuel</h2>
+    <div id="description">
+      <p id="activity-description"></p>
+      <p id="examples"></p>
+      <p id="statistics"></p>
+    </div>
+  </div>
+
+      <!-- Home Button -->
+      <div class="home-button-container">
+        <a href="./index.html" class="home-link"><i class="fa-solid fa-house"></i> Home</a>
+    </div>
+
+<script>
+const monastery = document.getElementById('monastery');
+const description = document.getElementById('description');
+let monks = [];
+let currentTime = 'morning';
+let currentSeason = 'spring';
+let currentCentury = '11';
+
+class Monk {
+  constructor() {
+    this.element = document.createElement('div');
+    this.element.className = 'monk';
+    this.updatePosition();
+    monastery.appendChild(this.element);
+  }
+
+  updatePosition() {
+    this.element.style.left = `${Math.random() * 780}px`;
+    this.element.style.top = `${Math.random() * 560}px`;
+  }
+
+  updateActivity(time, season) {
+    switch(time) {
+      case 'morning':
+        if (Math.random() < 0.7) {
+          this.moveToChurch();
+        } else {
+          this.moveToScriptorium();
+        }
+        break;
+      case 'afternoon':
+        if (season === 'winter') {
+          this.moveToScriptorium();
+        } else {
+          if (Math.random() < 0.6) {
+            this.moveToField();
+          } else {
+            this.moveToGarden();
+          }
+        }
+        break;
+      case 'night':
+        this.moveToChurch();
+        break;
+    }
+  }
+
+  moveToChurch() {
+    this.element.style.left = `${Math.random() * 80 + 620}px`;
+    this.element.style.top = `${Math.random() * 180 + 20}px`;
+  }
+
+  moveToScriptorium() {
+    this.element.style.left = `${Math.random() * 180 + 600}px`;
+    this.element.style.top = `${Math.random() * 130 + 450}px`;
+  }
+
+  moveToField() {
+    this.element.style.left = `${Math.random() * 280 + 20}px`;
+    this.element.style.top = `${Math.random() * 180 + 20}px`;
+  }
+
+  moveToGarden() {
+    this.element.style.left = `${Math.random() * 130 + 20}px`;
+    this.element.style.top = `${Math.random() * 80 + 500}px`;
+  }
+}
+
+function createMonks(count) {
+  monks.forEach(monk => monk.element.remove());
+  monks = Array.from({ length: count }, () => new Monk());
+}
+
+function updateBackground() {
+  monastery.style.transition = 'all 1s ease';
+  
+  const timeColors = {
+    'morning': '#87CEEB',
+    'afternoon': '#FFB74D',
+    'night': '#2c3e50'
+  };
+
+  const seasonColors = {
+    'spring': '#8bc34a',
+    'summer': '#fdd835',
+    'autumn': '#ff9800',
+    'winter': '#cfd8dc'
+  };
+
+  monastery.style.backgroundColor = timeColors[currentTime];
+  document.querySelector('.field').style.backgroundColor = seasonColors[currentSeason];
+  document.querySelector('.garden').style.backgroundColor = 
+    currentSeason === 'winter' ? '#b0bec5' : '#4caf50';
+}
+
+function updateMonkActivities() {
+  monks.forEach(monk => monk.updateActivity(currentTime, currentSeason));
+}
+
+function updateDescription() {
+  const activityDescription = document.getElementById('activity-description');
+  const examples = document.getElementById('examples');
+  const statistics = document.getElementById('statistics');
+
+  const activities = {
+    'morning': 'Au petit matin, les moines commencent leur journée par la prière à l\'église, suivie de la lecture des Écritures au scriptorium. C\'est un moment de recueillement et d\'étude.',
+    'afternoon': 'L\'après-midi est consacré au travail manuel. Les moines s\'activent dans les champs et les jardins, ou étudient au scriptorium pendant l\'hiver.',
+    'night': 'À la tombée de la nuit, les moines se rassemblent à l\'église pour la prière du soir avant de se retirer dans leurs cellules. Certains restent éveillés pour des vigiles nocturnes.'
+  };
+
+  const seasonalActivities = {
+    'spring': 'Au printemps, les jardins du monastère s\'animent. Les moines plantent des légumes, des herbes médicinales et commencent à tailler les vignes.',
+    'summer': 'L\'été est une période d\'intense activité agricole. Les moines passent de longues heures sous le soleil, s\'occupant des vergers et préparant le foin pour l\'hiver.',
+    'autumn': 'L\'automne est le temps des dernières récoltes et des préparatifs pour l\'hiver. C\'est la saison des vendanges et de la fabrication du vin.',
+    'winter': 'En hiver, les moines se concentrent sur les activités intérieures. Ils passent plus de temps à étudier, à fabriquer des chandelles et à réparer les outils.'
+  };
+
+  const centuryContexts = {
+    '11': 'Au 11ème siècle, les monastères sont des centres cruciaux d\'apprentissage et de spiritualité.',
+    '12': 'Le 12ème siècle voit l\'émergence de nouveaux ordres monastiques, mettant l\'accent sur la simplicité.',
+    '13': 'Au 13ème siècle, les monastères deviennent de riches propriétaires terriens, influençant les économies locales.'
+  };
+
+  const examplesText = {
+    'morning': 'Par exemple, certains moines préparent le petit-déjeuner pour la communauté, composé généralement de pain et de bière légère. D\'autres commencent à copier des manuscrits, un travail qui demande une grande concentration.',
+    'afternoon': 'Dans les champs, ils labourent, sèment ou récoltent selon la saison. Au scriptorium, un moine peut passer plusieurs mois, voire des années, à copier un seul livre, ornant chaque page de magnifiques enluminures.',
+    'night': 'Pendant les vigiles nocturnes, certains moines psalmodient des prières dans l\'obscurité de l\'église. D\'autres peuvent continuer leur travail d\'écriture à la lueur des bougies, profitant du calme de la nuit.'
+  };
+
+  const statisticsText = {
+    '11': 'À cette époque, environ 1% de la population masculine est moine. Les moines se lèvent généralement à 2h du matin pour la première prière de la journée.',
+    '12': 'Au 12ème siècle, le nombre de moines augmente, atteignant près de 2% de la population masculine. La journée commence toujours tôt, avec la prière de matines vers 3h du matin.',
+    '13': 'Au 13ème siècle, la population monastique atteint son apogée, représentant jusqu\'à 3% de la population masculine dans certaines régions. La journée des moines commence un peu plus tard, vers 4h du matin.'
+  };
+
+  activityDescription.textContent = `${activities[currentTime]} ${seasonalActivities[currentSeason]} ${centuryContexts[currentCentury]}`;
+  examples.textContent = examplesText[currentTime];
+  statistics.textContent = statisticsText[currentCentury];
+}
+
+function updateScenario() {
+  updateBackground();
+  updateMonkActivities();
+  updateDescription();
+}
+
+function setActiveButton(buttonId) {
+  document.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(buttonId).classList.add('active');
+}
+
+function setupButtonListeners() {
+  const timeButtons = document.querySelectorAll('.time');
+  const seasonButtons = document.querySelectorAll('.season');
+  const centuryButtons = document.querySelectorAll('.century');
+
+  timeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      currentTime = button.id;
+      setActiveButton(button.id);
+      updateScenario();
+    });
+  });
+
+  seasonButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      currentSeason = button.id;
+      setActiveButton(button.id);
+      updateScenario();
+    });
+  });
+
+  centuryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      currentCentury = button.id.replace('century', '');
+      setActiveButton(button.id);
+      createMonks(10 + (currentCentury - 11) * 5);
+      updateScenario();
+    });
+  });
+}
+
+// Configuration initiale
+createMonks(10);
+updateScenario();
+setActiveButton('morning');
+setActiveButton('spring');
+setActiveButton('century11');
+setupButtonListeners();
+</script>
+</body>
+</html>

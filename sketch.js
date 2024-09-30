@@ -197,6 +197,11 @@ function drawCurrentImage() {
         console.log("Church Plan Area clicked!");
         window.location = "church_get_out.html";
       } ));
+
+      clickableAreas.push(new ClickableArea(310, 310, 100, 180, () => {
+        console.log("Moines");
+        window.location = "simu_moines.html";
+      } ));
       break;
   }
 
