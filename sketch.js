@@ -153,22 +153,22 @@ function drawCurrentImage() {
         window.location = "QuizHistory/index.html";
       },img ));
       
-      clickableAreas.push(new ClickableArea(400, 630, 150, 100, () => {
+      clickableAreas.push(new ClickableArea(400, 430, 150, 100, () => {
         console.log("Area 2 clicked!");
         window.location = "Puzzle/index.html";
       }));
 
-      clickableAreas.push(new ClickableArea(540, 500, 150, 100, () => {
+      clickableAreas.push(new ClickableArea(540, 350, 150, 100, () => {
         console.log("Area 3 clicked!");
         window.location = "Launus_treasure/index.html";
-      },img , 0, 150));
+      },img , 0, 300));
 
-      clickableAreas.push(new ClickableArea(220, 200, 150, 100, () => {
+      clickableAreas.push(new ClickableArea(220, 100, 150, 100, () => {
         console.log("Area 3 clicked!");
         window.location = "Launus_adventure_game/index.html";
       }));
 
-      clickableAreas.push(new ClickableArea(820, 200, 150, 100, () => {
+      clickableAreas.push(new ClickableArea(820, 100, 150, 100, () => {
         console.log("Area 3 clicked!");
         window.location = "Launus_adventure_game/index.html";
       }));
@@ -178,12 +178,12 @@ function drawCurrentImage() {
       img = overviewImg;
 
       // Add clickable areas for the 3-4 view
-      clickableAreas.push(new ClickableArea(680, 300, 130, 200, () => {
+      clickableAreas.push(new ClickableArea(680, 200, 130, 130, () => {
         console.log("3-4 View Area clicked!");
         window.location = "parchment_clean.html";
       }));
 
-      clickableAreas.push(new ClickableArea(740, 130, 90, 200, () => {
+      clickableAreas.push(new ClickableArea(740, 100, 90, 120, () => {
         console.log("3-4 View Area clicked!");
         window.location = "info_church/index.html";
       }));
@@ -193,12 +193,12 @@ function drawCurrentImage() {
       img = planEgliseImg;
 
       // Add clickable areas for the church plan
-      clickableAreas.push(new ClickableArea(850, 350, 150, 100, () => {
+      clickableAreas.push(new ClickableArea(860, 230, 130, 80, () => {
         console.log("Church Plan Area clicked!");
         window.location = "church_get_out.html";
       } ));
 
-      clickableAreas.push(new ClickableArea(310, 310, 100, 180, () => {
+      clickableAreas.push(new ClickableArea(310, 210, 100, 130, () => {
         console.log("Moines");
         window.location = "simu_moines.html";
       } ));
